@@ -1,0 +1,7 @@
+
+.vagrant/
+boxes/
+
+vendor/
+
+.env

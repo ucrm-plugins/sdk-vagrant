@@ -1,0 +1,23 @@
+{
+    "name": "ucrm-plugins/sdk-vagrant",
+    "description": "A collection of Vagrant Tasks for Robo and Vagrant-based UISP boxes.",
+    "type": "project",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Ryan Spaeth",
+            "email": "rspaeth@spaethtech.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "consolidation/robo": "3.0.4",
+        "vlucas/phpdotenv": "^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "SpaethTech\\Robo\\Vagrant\\": "src/"
+        }
+    }
+}

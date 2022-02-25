@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Sensitive Files" pattern="file:.env" />
+</component>

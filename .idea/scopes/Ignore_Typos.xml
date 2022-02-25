@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Ignore Typos" pattern="file:.env||file:composer.lock" />
+</component>
