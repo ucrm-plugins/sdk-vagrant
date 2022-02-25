@@ -240,5 +240,25 @@ trait VagrantTasks
         return $this->task(Tasks\Cloud\Auth\WhoAmI::class, $pathToVagrant);
     }
     
+    /**
+     * @param string $organization
+     * @param string $name
+     * @param string $version
+     * @param string $provider
+     * @param string|null $file
+     * @param string|null $pathToVagrant
+     *
+     * @return Tasks\Cloud\Publish
+     */
+    protected function taskVagrantCloudPublish(
+        string $organization,
+        string $name,
+        string $version,
+        string $provider,
+        ?string $file = NULL,
+        ?string $pathToVagrant = NULL)
+    {
+        return $this->task(Tasks\Cloud\Publish::class, $organization, $name, $version, $provider, $file, $pathToVagrant);
+    }
     
 }

@@ -22,6 +22,7 @@ abstract class Base extends BaseTask implements CommandInterface
     protected array $options = [];
     protected string $executable = "";
     protected string $action = "";
+    protected string $append = "";
     
     /**
      * Default constructor.
@@ -53,7 +54,7 @@ abstract class Base extends BaseTask implements CommandInterface
      */
     public function getCommand() : string
     {
-        return "$this->executable $this->action$this->arguments";
+        return "$this->executable $this->action$this->arguments $this->append";
     }
     
     /**

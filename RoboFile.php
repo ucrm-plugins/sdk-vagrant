@@ -2,6 +2,7 @@
 /**
  * @noinspection PhpUnused
  * @noinspection PhpUnusedParameterInspection
+ * @noinspection PhpDocSignatureIsNotCompleteInspection
  */
 declare(strict_types=1);
 
@@ -23,9 +24,9 @@ final class RoboFile extends Tasks
 {
     private const DEFAULT_UISP_VERSION = "1.4.2";
     
-    
     public function __construct()
     {
+        // Load the project's ".env" file, if it exists!
         $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
         $dotenv->safeLoad();
     }
@@ -35,14 +36,13 @@ final class RoboFile extends Tasks
     use SpaethTech\Robo\Vagrant\VagrantCommands;
     
     /**
-     * @param ConsoleIO $io
      * @param string $version
      *
      * @return void
      */
     public function boxPackage(ConsoleIO $io, string $version = self::DEFAULT_UISP_VERSION)
     {
-        //vagrant package --output ./boxes/${UISP_VERSION}/uisp.box
+        //Runs: vagrant package --output ./boxes/$version/uisp.box
         $this
             ->taskVagrantPackage()
             ->outputFile("./boxes/$version/uisp.box")
@@ -50,15 +50,21 @@ final class RoboFile extends Tasks
     }
     
     
-    
+    /**
+     * @param string $version
+     *
+     * @return void
+     */
     public function boxPublish(ConsoleIO $io, string $version = self::DEFAULT_UISP_VERSION)
     {
         //$token = $_ENV["VAGRANT_CLOUD_TOKEN"];
+        $path = __DIR__."/boxes/$version/uisp.box";
         
         $this
-            //->taskVagrantCloudAuthLogin()
-            //->check()
-            ->taskVagrantCloudAuthWhoAmI()
+            ->taskVagrantCloudPublish("ucrm-plugins", "uisp", $version, "virtualbox", $path)
+            ->withVersionDescription("UISP $version running on Ubuntu 20.04")
+            ->release()
+            ->force()
             ->run();
         
         //$this
