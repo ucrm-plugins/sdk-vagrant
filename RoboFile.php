@@ -22,13 +22,19 @@ use Robo\Tasks;
  */
 final class RoboFile extends Tasks
 {
-    private const DEFAULT_UISP_VERSION = "1.4.2";
+    //private string $autoVersion = "1.4.2";
     
     public function __construct()
     {
         // Load the project's ".env" file, if it exists!
         $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
         $dotenv->safeLoad();
+        
+        define("UISP_VERSION",
+            (array_key_exists("UISP_VERSION", $_ENV) && $_ENV["UISP_VERSION"])
+                ? $_ENV["UISP_VERSION"]
+                : "1.4.2"
+        );
     }
     
     
@@ -36,12 +42,14 @@ final class RoboFile extends Tasks
     use SpaethTech\Robo\Vagrant\VagrantCommands;
     
     /**
-     * @param string $version
+     * @param string|null $version
      *
      * @return void
      */
-    public function boxPackage(ConsoleIO $io, string $version = self::DEFAULT_UISP_VERSION)
+    public function boxPackage(ConsoleIO $io, ?string $version = null)
     {
+        $version = $version ?? UISP_VERSION;
+        
         //Runs: vagrant package --output ./boxes/$version/uisp.box
         $this
             ->taskVagrantPackage()
@@ -51,14 +59,20 @@ final class RoboFile extends Tasks
     
     
     /**
-     * @param string $version
+     * @param string|null $version
      *
      * @return void
      */
-    public function boxPublish(ConsoleIO $io, string $version = self::DEFAULT_UISP_VERSION)
+    public function boxPublish(ConsoleIO $io, ?string $version = null)
     {
+        $version = $version ?? UISP_VERSION;
+        
         //$token = $_ENV["VAGRANT_CLOUD_TOKEN"];
-        $path = __DIR__."/boxes/$version/uisp.box";
+        if (! $path = realpath(__DIR__."/boxes/$version/uisp.box"))
+        {
+            $io->error("The path \"$path\" does not exist, exiting!");
+            return;
+        }
         
         $this
             ->taskVagrantCloudPublish("ucrm-plugins", "uisp", $version, "virtualbox", $path)
